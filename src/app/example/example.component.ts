@@ -150,6 +150,10 @@ export class ExampleComponent implements OnInit {
     }
   };
 
+  isLoaded: boolean = false;
+  currentJson: any;
+  currentHTML: any;
+
   constructor() { }
 
   ngOnInit() { }
@@ -159,7 +163,7 @@ export class ExampleComponent implements OnInit {
 
   editorLoaded(event) {
     console.log('editorLoaded');
-    this.emailEditor.editor.loadDesign(sample);
+    this.isLoaded = true;
   }
 
   editorReady(event) {
@@ -167,22 +171,68 @@ export class ExampleComponent implements OnInit {
   }
 
   saveDesign() {
-    this.emailEditor.editor.saveDesign((data) =>
-      console.log('saveDesign', data)
-    );
+    this.emailEditor.editor.saveDesign(this.saveJsonFile);
+  }
+
+  setCurrentConfig = (data: any): void => {
+    this.currentJson = data;
+    this.currentHTML = data.html;
   }
 
   exportHtml() {
-    this.emailEditor.editor.exportHtml((data) =>
-      console.log('exportHtml', data)
-    );
+    this.emailEditor.editor.exportHtml(this.saveHtmlFile);
   }
-  
+
+  saveJsonFile = (data: any) => {
+    var blob = new Blob([JSON.stringify(data)], { type: 'application/json' });
+    let url = window.URL.createObjectURL(blob);
+    let a = document.createElement('a');
+    document.body.appendChild(a);
+    a.setAttribute('style', 'display: none');
+    a.href = url;
+    a.download = `${new Date().getTime()}`;
+    a.click();
+    window.URL.revokeObjectURL(url);
+    a.remove();
+  }
+
+  saveHtmlFile = (data: any) => {
+    var blob = new Blob([data.html], { type: 'text/html' });
+    let url = window.URL.createObjectURL(blob);
+    let a = document.createElement('a');
+    document.body.appendChild(a);
+    a.setAttribute('style', 'display: none');
+    a.href = url;
+    a.download = `${new Date().getTime()}`;
+    a.click();
+    window.URL.revokeObjectURL(url);
+    a.remove();
+  }
+
+  loadDesign() {
+    this.emailEditor.editor.loadDesign(sample);
+  }
+
   updated(data: any) {
-    console.log(data);
+    this.emailEditor.editor.saveDesign(this.setCurrentConfig);
   }
 
   imageUpload(data: any) {
     console.log(data);
   }
+  fileToUpload: File | null = null;
+
+  handleFileInput(event: any) {
+    const files = event.target.files
+    this.fileToUpload = files.item(0);
+
+    const reader = new FileReader();
+    reader.onload = (result: any) => {
+      this.emailEditor.editor.loadDesign(JSON.parse(result.target.result));
+    };
+
+    // Read in the image file as a data URL.
+    reader.readAsText(this.fileToUpload);
+  }
+
 }

@@ -37,3 +37,30 @@
   max-width: 150px;
   cursor: pointer;
 }
+
+#bar label {
+  flex: 1;
+  padding: 10px;
+  margin-left: 10px;
+  font-size: 14px;
+  font-weight: bold;
+  background-color: #000;
+  color: #fff;
+  border: 0px;
+  max-width: 150px;
+  cursor: pointer;
+  text-align: center;
+}
+
+#bar button:disabled {
+  flex: 1;
+  padding: 10px;
+  margin-left: 10px;
+  font-size: 14px;
+  font-weight: bold;
+  background-color: #585858;
+  color: #fff;
+  border: 0px;
+  max-width: 150px;
+  cursor: pointer;
+}
