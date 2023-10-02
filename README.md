@@ -1,27 +1,116 @@
-# AngularEmailEditor
+# Angular Email Editor
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 16.2.4.
+The excellent drag-n-drop email editor by [Unlayer](https://unlayer.com/embed) as a [Angular](https://angular.io/) _wrapper component_. This is the most powerful and developer friendly visual email builder for your app.
 
-## Development server
+|                                                           Video Overview                                                            |
+| :---------------------------------------------------------------------------------------------------------------------------------: |
+| [![Angular Email Editor](https://unroll-assets.s3.amazonaws.com/unlayervideotour.png)](https://www.youtube.com/watch?v=MIWhX-NF3j8) |
+|                                        _Watch video overview: https://youtu.be/MIWhX-NF3j8_                                         |
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
+## Live Demo
 
-## Code scaffolding
+Check out the live demo here: https://angular-email-editor-demo.netlify.com/ ([Source Code](https://github.com/edarkea/angular-email-editor))
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+## Usage
 
-## Build
+Next, you'll need to import the Email Editor module in your app's module.
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
+**app.module.ts**
 
-## Running unit tests
+```ts
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+import { EmailEditorModule } from 'angular-email-editor';
+...
 
-## Running end-to-end tests
+@NgModule({
+  ...
+  imports: [ EmailEditorModule ],
+  ...
+});
+```
 
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
+**app.component.ts**
 
-## Further help
+```ts
+import { Component, ViewChild } from '@angular/core';
+import { EmailEditorComponent } from 'angular-email-editor';
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+@Component({
+  selector: 'app-root',
+  templateUrl: './app.component.html',
+  styleUrls: ['./app.component.css'],
+})
+export class AppComponent {
+  title = 'angular-email-editor';
+
+  @ViewChild(EmailEditorComponent)
+  private emailEditor: EmailEditorComponent;
+
+  // called when the editor is created
+  editorLoaded() {
+    console.log('editorLoaded');
+    // load the design json here
+    // this.emailEditor.editor.loadDesign({});
+  }
+
+  // called when the editor has finished loading
+  editorReady() {
+    console.log('editorReady');
+  }
+
+  exportHtml() {
+    this.emailEditor.editor.exportHtml((data) =>
+      console.log('exportHtml', data)
+    );
+  }
+}
+```
+
+**app.component.html**
+
+```html
+<div class="container">
+  <button (click)="exportHtml()">Export</button>
+  <email-editor
+    (loaded)="editorLoaded($event)"
+    (ready)="editorReady($event)"
+  ></email-editor>
+</div>
+```
+
+### Methods
+
+| method         | params              | description                                             |
+| -------------- | ------------------- | ------------------------------------------------------- |
+| **loadDesign** | `Object data`       | Takes the design JSON and loads it in the editor        |
+| **saveDesign** | `Function callback` | Returns the design JSON in a callback function          |
+| **exportHtml** | `Function callback` | Returns the design HTML and JSON in a callback function |
+
+See the [example source](https://github.com/unlayer/angular-email-editor/tree/master/src) for a reference implementation.
+
+### Properties
+
+- `editorId` `String` HTML div id of the container where the editor will be embedded (optional)
+- `minHeight` `String` minimum height to initialize the editor with (default 500px)
+- `options` `Object` options passed to the Unlayer editor instance (default {})
+- `tools` `Object` configuration for the built-in and custom tools (default {})
+- `appearance` `Object` configuration for appearance and theme (default {})
+- `projectId` `Integer` Unlayer project ID (optional)
+- `loaded` `Function` called when the editor instance is created
+- `ready` `Function` called when the editor has finished loading
+
+See the [Unlayer Docs](https://docs.unlayer.com/) for all available options.
+
+## Custom Tools
+
+Custom tools can help you add your own content blocks to the editor. Every application is different and needs different tools to reach it's full potential. [Learn More](https://docs.unlayer.com/docs/custom-tools)
+
+[![Custom Tools](https://unroll-assets.s3.amazonaws.com/custom_tools.png)](https://docs.unlayer.com/docs/custom-tools)
+
+## Localization
+
+You can submit new language translations by creating a PR on this GitHub repo: https://github.com/unlayer/translations. Translations managed by [PhraseApp](https://phraseapp.com)
+
+### License
+
+Copyright (c) 2021 Unlayer. [MIT](LICENSE) Licensed.
