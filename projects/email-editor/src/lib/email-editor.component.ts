@@ -23,6 +23,7 @@ export interface UnlayerOptions {
   tools?: object;
   appearance?: object;
   locale?: string;
+  fonts?: object
 }
 
 let lastEditorId = 0;
@@ -48,6 +49,8 @@ export class EmailEditorComponent implements OnInit, AfterViewInit {
 
   @Output() loaded = new EventEmitter();
   @Output() ready = new EventEmitter();
+  @Output() updated = new EventEmitter();
+  @Output() imageUpload = new EventEmitter();
 
   editor: any;
 
@@ -95,6 +98,22 @@ export class EmailEditorComponent implements OnInit, AfterViewInit {
     this.editor.addEventListener('editor:ready', () => {
       this.ready.emit({});
     });
+
+    this.editor.addEventListener('design:updated', (data) => {
+      var type = data.type; // body, row, content
+      var item = data.item;
+      var changes = data.changes;
+      this.updated.emit({ type, item, changes });
+    });
+
+    this.editor.addEventListener('image:uploaded', (data) => {
+      var image = data.image;
+      var url = image.url;
+      var width = image.width;
+      var height = image.height;
+      this.imageUpload.emit({ image, url, width, height });
+    });
+
   }
 
   public loadDesign(data: object) {

@@ -10,6 +10,8 @@
     [options]="options"
     (loaded)="editorLoaded($event)"
     (ready)="editorReady($event)"
+    (updated)="updated($event)"
+    (imageUpload)="imageUpload($event)"
     #editor
   ></email-editor>
 </div>
