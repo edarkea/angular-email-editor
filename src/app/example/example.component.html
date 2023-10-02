@@ -1,0 +1,15 @@
+<div class="container">
+  <div id="bar">
+    <h1>Angular Email Editor (Edark EA)</h1>
+
+    <button (click)="saveDesign()">Save Design</button>
+    <button (click)="exportHtml()">Export HTML</button>
+  </div>
+
+  <email-editor
+    [options]="options"
+    (loaded)="editorLoaded($event)"
+    (ready)="editorReady($event)"
+    #editor
+  ></email-editor>
+</div>
